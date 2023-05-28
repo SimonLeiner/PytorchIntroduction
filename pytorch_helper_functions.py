@@ -51,5 +51,42 @@ def print_train_time(start, end, device=None):
 
     return total_time
 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# Checked: Function works
+
+def save_model(model, path):
+    """
+    This function saves the model.
+
+    :param model: object: Model to save.
+    :param path: str: Path to save the model to.
+    :return: None
+    """
+
+    # save the model
+    torch.save(model.state_dict(), path)
+
+    return None
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Checked: Function works
+
+def load_model(model, path):
+    """
+    This function loads the model.
+
+    :param model: object: Model to load.
+    :param path: str: Path to load the model from.
+    :return: model: object: Loaded model.
+    """
+
+    # load the model
+    model.load_state_dict(torch.load(path))
+
+    return model
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
