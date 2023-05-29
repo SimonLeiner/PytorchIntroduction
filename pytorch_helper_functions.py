@@ -7,6 +7,26 @@ Description: This file contains helper functions for the pytorch introduction
 
 import numpy as np
 import torch
+import os
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Checked: Function works
+
+def walk_thorugh_direcotry(dir_path: str):
+    """
+    This function walks through a directory and prints the file names.
+
+    :param dir_path: str: Path to the directory.
+    :return: None
+    """
+
+    # loop through the directory
+    for dir_path, dir_names, file_names in os.walk(dir_path):
+        print(f"There are {len(dir_names)} directories and {len(file_names)} images in '{dir_path}")
+
+    return None
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
