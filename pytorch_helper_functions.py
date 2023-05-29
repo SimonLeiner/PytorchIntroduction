@@ -13,7 +13,7 @@ import torch
 
 # Checked: Function works
 
-def set_global_seed(seed=42):
+def set_global_seed(seed: int = 42):
     """
     This function sets the global seed for all random number generators.
 
@@ -33,7 +33,7 @@ def set_global_seed(seed=42):
 
 # Checked: Function works
 
-def print_train_time(start, end, device=None):
+def print_train_time(start: float, end: float, device: str = None):
     """
     This function prints the time it took to train the model.
 
@@ -56,7 +56,7 @@ def print_train_time(start, end, device=None):
 
 # Checked: Function works
 
-def save_model(model, path):
+def save_model(model: torch.nn.Module, path: str):
     """
     This function saves the model.
 
@@ -75,7 +75,7 @@ def save_model(model, path):
 
 # Checked: Function works
 
-def load_model(model, path):
+def load_model(model: torch.nn.Module, path: str):
     """
     This function loads the model.
 

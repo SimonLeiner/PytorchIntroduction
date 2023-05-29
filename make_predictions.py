@@ -30,6 +30,7 @@ def make_predictions(X: torch.Tensor, model: torch.nn.Module, device: torch.devi
 
     # turn on inference mode
     with torch.inference_mode():
+
         # make sure the data is on the target device
         X = X.to(device)
 
