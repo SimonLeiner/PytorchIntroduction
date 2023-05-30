@@ -65,16 +65,31 @@ def get_confusionmatrix(y_true: pd.Series, y_pred: pd.Series, normalize: str = N
 # Checked: Function works
 
 def plot_loss_curve(df_scores: pd.DataFrame):
-    """"""
+    """
+    This function plots the loss and accuracy curves.
 
-    # plot the loss curve
-    sns.lineplot(data=pd.melt(df_scores, ['Epoch'], x="Epoch", y="value", hue="variable"))
+    :param df_scores: pd.DataFrame: Dataframe with the scores
+    :return: None
+    """
 
-    # set stylisitcal stuff
-    plt.title('Loss Curve: \n')
-    plt.xlabel("Epochs:")
-    plt.ylabel("Loss:")
-    plt.show()
+    # Setup a plot
+    plt.figure(figsize=(15, 7))
+
+    # Plot loss
+    plt.subplot(1, 2, 1)
+    plt.plot(df_scores["Epoch"], df_scores["Train Loss"], label='Train Loss')
+    plt.plot(df_scores["Epoch"], df_scores["Validation Loss"], label='Validation Loss')
+    plt.title('Loss:')
+    plt.xlabel('Epochs:')
+    plt.legend()
+
+    # Plot accuracy
+    plt.subplot(1, 2, 2)
+    plt.plot(df_scores["Epoch"], df_scores["Train Accuracy"], label='Train Accuracy')
+    plt.plot(df_scores["Epoch"], df_scores["Validation Accuracy"], label='Validation Accuracy')
+    plt.title('Accuracy:')
+    plt.xlabel('Epochs:')
+    plt.legend()
 
     return None
 

@@ -42,6 +42,10 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     train_acc_values = []
     val_acc_values = []
     epoch_count = []
+    train_pred = []
+    train_true = []
+    val_pred = []
+    val_true = []
 
     # create a training and test loop
     for epoch in tqdm(range(EPOCHS)):
@@ -54,6 +58,7 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
 
         # training: loop thorugh the training batches
         for batch, (X_train, y_train) in enumerate(train_dataloader):
+
             # put data on device
             X_train, y_train = X_train.to(device), y_train.to(device)
 
@@ -65,6 +70,11 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
             batch_train_loss += training_loss
             batch_train_acc += torchmetrics.functional.accuracy(preds=y_pred_train.argmax(dim=1), target=y_train,
                                                                 task="multiclass", num_classes=y_pred_train.shape[1])
+
+            # append predictions and true values in the last epoch
+            if epoch == EPOCHS - 1:
+                train_pred.append(y_pred_train)
+                train_true.append(y_train)
 
             # optimizer zero grad
             optimizer.zero_grad()
@@ -90,6 +100,7 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
 
             # validation: loop thorugh the validation batches
             for batch, (X_val, y_val) in enumerate(val_dataloader):
+
                 # put data on device
                 X_val, y_val = X_val.to(device), y_val.to(device)
 
@@ -101,6 +112,11 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
                 batch_val_loss += val_loss
                 batch_val_acc += torchmetrics.functional.accuracy(preds=y_pred_val.argmax(dim=1), target=y_val,
                                                                   task="multiclass", num_classes=y_pred_val.shape[1])
+
+                # append predictions and true values in the last epoch
+                if epoch == EPOCHS - 1:
+                    val_pred.append(y_pred_val)
+                    val_true.append(y_val)
 
             # divide total validation loss by length of val dataloader: Average validation loss per batch
             batch_val_loss /= len(val_dataloader)
@@ -123,6 +139,10 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     # convert the lists to pandas dataframe for plotting
     df_scores = pd.DataFrame({"Epoch": epoch_count, "Train Loss": train_loss_values, "Validation Loss": val_loss_values,
                               "Train Accuracy": train_acc_values, "Validation Accuracy": val_acc_values})
+
+    # convert the predictions to pandas dataframe
+    df_predictions = pd.DataFrame({"Train Predictions": train_pred, "Train True Values": train_true,
+                                   "Val Predictions": val_pred, "Val True Values": val_true})
 
     # print
     print(f"Finished training.")
