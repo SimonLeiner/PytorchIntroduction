@@ -73,8 +73,8 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
 
             # append predictions and true values in the last epoch
             if epoch == EPOCHS - 1:
-                train_pred.append(y_pred_train)
-                train_true.append(y_train)
+                train_pred.append(y_pred_train.detach().cpu().numpy())
+                train_true.append(y_train.detach().cpu().numpy())
 
             # optimizer zero grad
             optimizer.zero_grad()
@@ -115,8 +115,8 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
 
                 # append predictions and true values in the last epoch
                 if epoch == EPOCHS - 1:
-                    val_pred.append(y_pred_val)
-                    val_true.append(y_val)
+                    val_pred.append(y_pred_val.detach().cpu().numpy())
+                    val_true.append(y_val.detach().cpu().numpy())
 
             # divide total validation loss by length of val dataloader: Average validation loss per batch
             batch_val_loss /= len(val_dataloader)
@@ -134,19 +134,21 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
             # print
             print(f"Epoch: {epoch}\n-------")
             print(
-                f"Train Loss: {batch_train_loss:.5f} & Accuracy:{batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy:{batch_val_acc:.5f} \n")
+                f"Train Loss: {batch_train_loss:.5f} & Accuracy: {batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy: {batch_val_acc:.5f} \n")
 
     # convert the lists to pandas dataframe for plotting
     df_scores = pd.DataFrame({"Epoch": epoch_count, "Train Loss": train_loss_values, "Validation Loss": val_loss_values,
                               "Train Accuracy": train_acc_values, "Validation Accuracy": val_acc_values})
 
     # convert the predictions to pandas dataframe
-    df_predictions = pd.DataFrame({"Train Predictions": train_pred, "Train True Values": train_true,
-                                   "Val Predictions": val_pred, "Val True Values": val_true})
+    df_train_predictions = pd.DataFrame({"Train Predictions": train_pred, "Train True Values": train_true})
+
+    # convert the predictions to pandas dataframe
+    df_val_predictions = pd.DataFrame({"Val Predictions": val_pred, "Val True Values": val_true})
 
     # print
     print(f"Finished training.")
 
-    return df_scores, df_predictions
+    return df_scores, df_train_predictions, df_val_predictions
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
