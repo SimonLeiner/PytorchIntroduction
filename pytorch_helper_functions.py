@@ -14,7 +14,7 @@ import os
 
 # Checked: Function works
 
-def walk_thorugh_direcotry(dir_path: str):
+def walk_through_directory(dir_path: str):
     """
     This function walks through a directory and prints the file names.
 
