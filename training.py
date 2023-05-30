@@ -30,7 +30,7 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     :param optimizer: object: Optimizer to use.
     :param epoch_print: int: print each epoch_print epochs.
     :param device: string: Device to use. Defaults to "cpu".
-    :return: df_scores, df_predictions : pandas.DataFrame: Dataframe with the training and validation loss per epoch and predictions of the last epoch.
+    :return: df_scores: pandas.DataFrame: Dataframe with the training and validation loss per epoch and predictions of the last epoch.
     """
 
     # print
@@ -42,10 +42,6 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     train_acc_values = []
     val_acc_values = []
     epoch_count = []
-    train_pred = []
-    train_true = []
-    val_pred = []
-    val_true = []
 
     # create a training and test loop
     for epoch in tqdm(range(EPOCHS)):
@@ -70,11 +66,6 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
             batch_train_loss += training_loss
             batch_train_acc += torchmetrics.functional.accuracy(preds=y_pred_train.argmax(dim=1), target=y_train,
                                                                 task="multiclass", num_classes=y_pred_train.shape[1])
-
-            # append predictions and true values in the last epoch
-            if epoch == EPOCHS - 1:
-                train_pred.append(y_pred_train.detach().cpu().numpy())
-                train_true.append(y_train.detach().cpu().numpy())
 
             # optimizer zero grad
             optimizer.zero_grad()
@@ -113,11 +104,6 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
                 batch_val_acc += torchmetrics.functional.accuracy(preds=y_pred_val.argmax(dim=1), target=y_val,
                                                                   task="multiclass", num_classes=y_pred_val.shape[1])
 
-                # append predictions and true values in the last epoch
-                if epoch == EPOCHS - 1:
-                    val_pred.append(y_pred_val.detach().cpu().numpy())
-                    val_true.append(y_val.detach().cpu().numpy())
-
             # divide total validation loss by length of val dataloader: Average validation loss per batch
             batch_val_loss /= len(val_dataloader)
             batch_val_acc /= len(val_dataloader)
@@ -140,15 +126,9 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     df_scores = pd.DataFrame({"Epoch": epoch_count, "Train Loss": train_loss_values, "Validation Loss": val_loss_values,
                               "Train Accuracy": train_acc_values, "Validation Accuracy": val_acc_values})
 
-    # convert the predictions to pandas dataframe
-    df_train_predictions = pd.DataFrame({"Train Predictions": train_pred, "Train True Values": train_true})
-
-    # convert the predictions to pandas dataframe
-    df_val_predictions = pd.DataFrame({"Val Predictions": val_pred, "Val True Values": val_true})
-
     # print
     print(f"Finished training.")
 
-    return df_scores, df_train_predictions, df_val_predictions
+    return df_scores
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
