@@ -71,7 +71,7 @@ def plot_transformed_images(image_path_list: list, transform: transforms.Compose
         with Image.open(random_image_path) as img:
             fig.add_subplot(rows, cols, i)
             plt.imshow(img)
-            plt.title(f"Original \nSize: {img.size}")
+            plt.title(f"Original ({image_class}) \nSize: {img.size}")
             plt.axis("off")
 
             # Transform and plot image
@@ -82,8 +82,6 @@ def plot_transformed_images(image_path_list: list, transform: transforms.Compose
             plt.imshow(transformed_image)
             plt.title(f"Transformed \nSize: {transformed_image.shape}")
             plt.axis("off")
-
-            fig.suptitle(f"Class: {image_class}", fontsize=16)
 
     return None
 
