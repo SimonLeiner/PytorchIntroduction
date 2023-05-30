@@ -30,7 +30,7 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     :param optimizer: object: Optimizer to use.
     :param epoch_print: int: print each epoch_print epochs.
     :param device: string: Device to use. Defaults to "cpu".
-    :return: df_scores: pandas.DataFrame: Dataframe with the training and validation loss per epoch.
+    :return: df_scores, df_predictions : pandas.DataFrame: Dataframe with the training and validation loss per epoch and predictions of the last epoch.
     """
 
     # print
@@ -147,6 +147,6 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     # print
     print(f"Finished training.")
 
-    return df_scores
+    return df_scores, df_predictions
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
