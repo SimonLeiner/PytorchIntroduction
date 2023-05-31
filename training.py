@@ -17,7 +17,8 @@ import torchmetrics
 
 def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.data.DataLoader,
              val_dataloader: torch.utils.data.DataLoader, loss_function: torch.nn.Module,
-             optimizer: torch.optim.Optimizer, epoch_print: int, device: torch.device = "cpu"):
+             optimizer: torch.optim.Optimizer, epoch_print: int, writer: torch.utils.tensorboard.writer.SummaryWriter,
+             device: torch.device = "cpu"):
     """
 
     This function trains the model and prints the training and validation loss per epoch.
@@ -29,6 +30,7 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     :param loss_function: object: Loss function to use.
     :param optimizer: object: Optimizer to use.
     :param epoch_print: int: print each epoch_print epochs.
+    :param writer: torch.utils.tensorboard.writer.SummaryWriter: Tensorboard writer.
     :param device: string: Device to use. Defaults to "cpu".
     :return: df_scores: pandas.DataFrame: Dataframe with the training and validation loss per epoch and predictions of the last epoch.
     """
@@ -36,12 +38,13 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
     # print
     print(f"Starting training.")
 
-    # empty lists to store the loss values
-    train_loss_values = []
-    val_loss_values = []
-    train_acc_values = []
-    val_acc_values = []
-    epoch_count = []
+    # dict with empty lists to store the loss values
+    results = {"Epoch": [],
+               "Train Loss": [],
+               "Validation Loss": [],
+               "Train Accuracy": [],
+               "Validation Accuracy": []
+               }
 
     # create a training and test loop
     for epoch in tqdm(range(EPOCHS)):
@@ -109,11 +112,26 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
             batch_val_acc /= len(val_dataloader)
 
         # append the loss values to the lists
-        epoch_count.append(epoch)
-        train_loss_values.append(batch_train_loss.detach().cpu().numpy())
-        val_loss_values.append(batch_val_loss.detach().cpu().numpy())
-        train_acc_values.append(batch_train_acc.detach().cpu().numpy())
-        val_acc_values.append(batch_val_acc.detach().cpu().numpy())
+        results["Epoch"].append(epoch)
+        results["Train Loss"].append(batch_train_loss.detach().cpu().numpy())
+        results["Validation Loss"].append(batch_val_loss.detach().cpu().numpy())
+        results["Train Accuracy"].append(batch_train_acc.detach().cpu().numpy())
+        results["Validation Accuracy"].append(batch_val_acc.detach().cpu().numpy())
+
+        # Add loss results to SummaryWriter
+        writer.add_scalars(main_tag="Loss",
+                           tag_scalar_dict={"Train Loss": batch_train_loss,
+                                            "Validation Loss": batch_val_loss},
+                           global_step=epoch)
+
+        # Add accuracy results to SummaryWriter
+        writer.add_scalars(main_tag="Accuracy",
+                           tag_scalar_dict={"Train Accuracy": batch_train_acc,
+                                            "Validation Accuracy": batch_val_acc},
+                           global_step=epoch)
+
+        # Track the PyTorch model architecture, and pass in an example input
+        writer.add_graph(model=model,input_to_model=torch.randn(32, 3, 224, 224).to(device))
 
         # print every epochs
         if epoch % epoch_print == 0:
@@ -122,9 +140,11 @@ def training(EPOCHS: int, model: torch.nn.Module, train_dataloader: torch.utils.
             print(
                 f"Train Loss: {batch_train_loss:.5f} & Accuracy: {batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy: {batch_val_acc:.5f} \n")
 
+    # Close the writer
+    writer.close()
+
     # convert the lists to pandas dataframe for plotting
-    df_scores = pd.DataFrame({"Epoch": epoch_count, "Train Loss": train_loss_values, "Validation Loss": val_loss_values,
-                              "Train Accuracy": train_acc_values, "Validation Accuracy": val_acc_values})
+    df_scores = pd.DataFrame(results)
 
     # print
     print(f"Finished training.")
