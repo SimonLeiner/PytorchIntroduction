@@ -15,47 +15,60 @@ import pandas as pd
 
 # Checked: Function works
 
-def get_confusionmatrix(y_true: pd.Series, y_pred: pd.Series, normalize: str = None):
+def get_confusionmatrix(y_pred_train: pd.Series, y_true_train: pd.Series,
+                        y_pred_val: pd.Series, y_true_val: pd.Series,
+                        class_names: list, normalize: str = None):
     """
 
     This function plots the confusion matrix. SEE: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
 
-    :param y_true: pd.Series: true y values
-    :param y_pred: pd.Series: predictions py the build_model
+    :param y_pred_train: pd.Series: predictions py the build_model
+    :param y_true_train: pd.Series: true y values
+    :param y_pred_val: pd.Series: predictions py the build_model
+    :param y_true_val: pd.Series: true y values
+    :param class_names: list: list of class names
     :param normalize: boolean: 'true' => normalizes the matrix
     :return: None
     """
 
     # get the confusion matrix
-    mat = confusion_matrix(y_true, y_pred, normalize=normalize)
+    mat_train = confusion_matrix(y_true_train, y_pred_train, normalize=normalize)
+    mat_val = confusion_matrix(y_true_val, y_pred_val, normalize=normalize)
 
-    # extract values:
-    tn, fp, fn, tp = mat.ravel()
-    pos = tp + fp
-    neg = tn + fn
-    total = tn + fp + fn + tp
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 9))
 
-    print(f"There are a Total of {total} predictions:")
-    print(f"The build_model predicted {pos} times ({round((pos / total), 2)}) % ture positives.")
-    print(f"The build_model predicted {neg} times ({round((neg / total), 2)}) % true negatives.")
-    print(f"The build_model predicted in total {round(((tp + tn) / total), 2)} % of the predictions correctly.")
-    print("-" * 10)
+    fig.suptitle('Confusion Matrix: \n')
 
-    # view it as heatmap:
     sns.heatmap(
-        mat,
+        mat_train,
         cbar=True,
         annot=True,
         square=True,
         fmt=".2f",
         annot_kws={"size": 10},
+        ax=ax1,
+        xticklabels=class_names,
+        yticklabels=class_names
     )
 
-    # set stylisitcal stuff
-    plt.title('Confusion Matrix: \n')
-    plt.xlabel("Predicted label:")
-    plt.ylabel("True label:")
-    plt.show()
+    ax1.set_title('Training Confusion Matrix')
+    ax1.set_xlabel('Predicted label:')
+    ax1.set_ylabel('True label:')
+
+    sns.heatmap(
+        mat_val,
+        cbar=True,
+        annot=True,
+        square=True,
+        fmt=".2f",
+        annot_kws={"size": 10},
+        ax=ax2,
+        xticklabels=class_names,
+        yticklabels=class_names
+    )
+    ax2.set_title('Validation Confusion Matrix')
+    ax2.set_xlabel('Predicted label:')
+    ax2.set_ylabel('True label:')
 
     return None
 
