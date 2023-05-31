@@ -8,6 +8,41 @@ Description: This file contains helper functions for the pytorch introduction
 import numpy as np
 import torch
 import os
+from torch.utils.tensorboard import SummaryWriter
+from datetime import datetime
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Checked: Function works
+
+
+def create_writer(experiment_name: str, model_name: str, extra: str = None):
+    """
+    This function creates a torch.utils.tensorboard.writer.SummaryWriter()
+    instance saving to a specific log_dir, which
+    is a combination of runs/timestamp/experiment_name/model_name/extra.
+    Where timestamp is the current date in YYYY-MM-DD format.
+
+    :param experiment_name: str: Name of experiment.
+    :param model_name: str: Name of model.
+    :param extra: str: Anything extra to add to the directory. Defaults to None.
+    :return: torch.utils.tensorboard.writer.SummaryWriter(): Instance of a writer saving to log_dir.
+    """
+
+    # Get timestamp of current date (all experiments on certain day live in same folder)
+    timestamp = datetime.now().strftime("%Y-%m-%d")
+
+    if extra:
+        # Create log directory path
+        log_dir = os.path.join("runs", timestamp, experiment_name, model_name, extra)
+    else:
+        log_dir = os.path.join("runs", timestamp, experiment_name, model_name)
+
+    # print
+    print(f"Created SummaryWriter, saving to: {log_dir}.")
+
+    return SummaryWriter(log_dir=log_dir)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
