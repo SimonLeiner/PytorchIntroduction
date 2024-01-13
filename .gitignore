@@ -1,3 +1,4 @@
 # Ignore all IDE config files
 .idea/
 
+.DS_Store
