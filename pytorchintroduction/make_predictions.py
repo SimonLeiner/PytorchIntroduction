@@ -1,26 +1,36 @@
 """
-Name: make_predictions.py in Project: PytorchIntroduction
-Author: Simon Leiner
-Date: 28.05.23
-Description: This file contains the prediction script
+Module containing functions to make predictions on data.
+
+- 'make_predictions': Makes a prediction on the data X with the model.
+
 """
 
 import torch
 import numpy as np
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Checked: Function works
-
-def make_predictions(data_loader: torch.utils.data.DataLoader, model: torch.nn.Module, device: torch.device = "cpu"):
+def make_predictions(
+    data_loader: torch.utils.data.DataLoader,
+    model: torch.nn.Module,
+    device: torch.device = "cpu",
+):
     """
-    This function makes a prediction on the data X with the model.
+    Makes a prediction on the data X with the model.
 
-    :param data_loader: torch.utils.data.DataLoader: Data to make a prediction on.
-    :param model: object: Model to make a prediction with.
-    :param device: string: Device to use. Defaults to "cpu".
-    :return: pred_values, true_values: lists: Predictions and true value of the model.
+    Args:
+        data_loader: torch.utils.data.DataLoader
+            Data loader containing the data to make predictions on.
+        model: torch.nn.Module
+            Model to make predictions with.
+        device: torch.device
+            Device to make predictions on.
+    Returns:
+        pred_values: np.ndarray
+            Predicted values.
+        pred_values_prob: np.ndarray
+            Predicted values as probabilities.
+        true_values: np.ndarray
+            True values.
     """
 
     pred_values = []
@@ -37,7 +47,6 @@ def make_predictions(data_loader: torch.utils.data.DataLoader, model: torch.nn.M
     with torch.inference_mode():
         # training: loop thorugh the training batches
         for batch, (X, y) in enumerate(data_loader):
-
             # put data on device
             X, y = X.to(device), y.to(device)
 
@@ -52,7 +61,9 @@ def make_predictions(data_loader: torch.utils.data.DataLoader, model: torch.nn.M
 
             # append
             pred_values.append(y_pred_final.detach().cpu().numpy())
-            pred_values_prob.append(torch.amax(y_pred_prob, dim=1).detach().cpu().numpy())
+            pred_values_prob.append(
+                torch.amax(y_pred_prob, dim=1).detach().cpu().numpy()
+            )
             true_values.append(y.detach().cpu().numpy())
 
     # flatten the lists
@@ -61,5 +72,3 @@ def make_predictions(data_loader: torch.utils.data.DataLoader, model: torch.nn.M
     true_values = np.concatenate(true_values).ravel()
 
     return pred_values, pred_values_prob, true_values
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
