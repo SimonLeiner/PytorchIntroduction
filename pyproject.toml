@@ -1,4 +1,6 @@
+# Ruff formatted
 [tool.ruff]
+
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
@@ -26,6 +28,7 @@ exclude = [
     "custom_notebooks"
 ]
 
+# set line legth
 line-length = 150
 indent-width = 4
 
