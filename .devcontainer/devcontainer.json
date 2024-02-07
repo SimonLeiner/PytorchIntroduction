@@ -24,16 +24,19 @@
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
-				"ms-toolsai.jupyter-keymap",
-				"ms-toolsai.jupyter",
 				"GitHub.copilot",
-				"njpwerner.autodocstring",
 				"ms-azuretools.vscode-docker",
-				"dracula-theme.theme-dracula",
 				"charliermarsh.ruff",
 				"tamasfe.even-better-toml",
 				"mechatroner.rainbow-csv",
-				"ritwickdey.LiveServer"
+				"garytyler.darcula-pycharm",
+				"github.vscode-github-actions",
+				"GitHub.vscode-pull-request-github",
+				"wayou.vscode-todo-highlight",
+				"GitHub.copilot-chat",
+				"redhat.vscode-yaml",
+				"ms-toolsai.jupyter-keymap",
+				"ms-toolsai.jupyter"
 			]
 		}
 	}

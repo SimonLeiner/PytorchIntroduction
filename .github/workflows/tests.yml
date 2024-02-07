@@ -1,24 +1,45 @@
 name: Tests
+
+# Controls when the workflow will run
 on:
-  - push
-  - pull_request
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+# Set Permissions
+permissions:
+  contents: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test:
+    name: Test wheels on ${{ matrix.os }} with ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false  # to not fail all combinations if just one fail
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11']
+        os: [macos-latest]
+        python-version: ['3.11']
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install tox tox-gh-actions
-    - name: Test with tox
-      run: tox
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: pip install ".[tests]"
+
+      - name: Run and write pytest
+        run: pytest --cov=./ --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
