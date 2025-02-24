@@ -6,8 +6,8 @@ Training functions for PyTorch models.
 
 import pandas as pd
 import torch
-from tqdm.auto import tqdm
 import torchmetrics
+from tqdm.auto import tqdm
 
 
 def training(
@@ -44,11 +44,11 @@ def training(
             SummaryWriter instance.
         device: torch.device
             Device to train the model on. Defaults to "cpu".
+
     Returns:
         df_scores: pd.DataFrame
             Dataframe containing the loss values per epoch.
     """
-
     # print
     print("Starting training.")
 
@@ -159,15 +159,16 @@ def training(
 
         # Track the PyTorch model architecture, and pass in an example input
         writer.add_graph(
-            model=model, input_to_model=torch.randn(32, 3, 224, 224).to(device)
+            model=model,
+            input_to_model=torch.randn(32, 3, 224, 224).to(device),
         )
 
         # print every epochs
         if epoch % epoch_print == 0:
             # print
-            print(f"Epoch: {epoch+1} / {EPOCHS}\n-------")
+            print(f"Epoch: {epoch + 1} / {EPOCHS}\n-------")
             print(
-                f"Train Loss: {batch_train_loss:.5f} & Accuracy: {batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy: {batch_val_acc:.5f} \n"
+                f"Train Loss: {batch_train_loss:.5f} & Accuracy: {batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy: {batch_val_acc:.5f} \n",
             )
 
     # Close the writer

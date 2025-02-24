@@ -7,11 +7,12 @@ Utility functions that are used in the PyTorch tutorials.
 - 'print_train_time': Prints the time it took to train the model.
 """
 
+import os
+from datetime import datetime
+
 import numpy as np
 import torch
-import os
 from torch.utils.tensorboard import SummaryWriter
-from datetime import datetime
 
 
 def create_writer(experiment_name: str, model_name: str, extra: str = None):
@@ -28,11 +29,11 @@ def create_writer(experiment_name: str, model_name: str, extra: str = None):
             Name of the model.
         extra: str
             Extra string to add to the log_dir. Defaults to None.
+
     Returns:
         writer: torch.utils.tensorboard.writer.SummaryWriter
             SummaryWriter instance.
     """
-
     # Get timestamp of current date (all experiments on certain day live in same folder)
     timestamp = datetime.now().strftime("%Y-%m-%d")
 
@@ -55,17 +56,15 @@ def walk_through_directory(dir_path: str):
     Args:
         dir_path: str
             Path to the directory.
+
     Returns:
         None
     """
-
     # loop through the directory
     for dir_path, dir_names, file_names in os.walk(dir_path):
         print(
-            f"There are {len(dir_names)} directories and {len(file_names)} images in '{dir_path}"
+            f"There are {len(dir_names)} directories and {len(file_names)} images in '{dir_path}",
         )
-
-    return None
 
 
 def set_global_seed(seed: int = 42):
@@ -75,16 +74,14 @@ def set_global_seed(seed: int = 42):
     Args:
         seed: int
             Seed to set. Defaults to 42.
+
     Returns:
         None
     """
-
     # set the seed for numpy, torch and cuda
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-
-    return None
 
 
 def print_train_time(start: float, end: float, device: str = None):
@@ -96,7 +93,6 @@ def print_train_time(start: float, end: float, device: str = None):
     :param device: str: Device that compute is running on. Defaults to None.
     :return: total_time: float: time between start and end in seconds (higher is longer).
     """
-
     # calculate the total time
     total_time = end - start
 

@@ -8,12 +8,13 @@ Plotting functions.
 
 """
 
-from sklearn.metrics import confusion_matrix
-import seaborn as sns
+import random
+
 import matplotlib.pyplot as plt
 import pandas as pd
-import random
+import seaborn as sns
 from PIL import Image
+from sklearn.metrics import confusion_matrix
 from torchvision import transforms
 
 
@@ -24,10 +25,10 @@ def plot_random_images(image_path_list: list):
     Args:
         image_path_list: list
             List of image paths.
+
     Returns:
         None
     """
-
     # plot several images
     fig = plt.figure(figsize=(18, 9))
     rows, cols = 4, 8
@@ -46,7 +47,6 @@ def plot_random_images(image_path_list: list):
             plt.imshow(img)
             plt.title(image_class)
             plt.axis(False)
-    return None
 
 
 def plot_transformed_images(image_path_list: list, transform: transforms.Compose):
@@ -58,10 +58,10 @@ def plot_transformed_images(image_path_list: list, transform: transforms.Compose
             List of image paths.
         transform: transforms.Compose
             Transformations to apply to the images.
+
     Returns:
         None
     """
-
     # plot several images
     fig = plt.figure(figsize=(18, 9))
     rows, cols = 3, 8
@@ -114,10 +114,10 @@ def get_confusionmatrix(
             List of class names.
         normalize: str
             Normalization mode. Defaults to None.
+
     Returns:
         None
     """
-
     # get the confusion matrix
     mat_train = confusion_matrix(y_true_train, y_pred_train, normalize=normalize)
     mat_val = confusion_matrix(y_true_val, y_pred_val, normalize=normalize)
@@ -157,8 +157,6 @@ def get_confusionmatrix(
     ax2.set_xlabel("Predicted label:")
     ax2.set_ylabel("True label:")
 
-    return None
-
 
 def plot_loss_curve(df_scores: pd.DataFrame):
     """
@@ -167,10 +165,10 @@ def plot_loss_curve(df_scores: pd.DataFrame):
     Args:
         df_scores: pd.DataFrame
             Dataframe containing the scores.
+
     Returns:
         None
     """
-
     # Setup a plot
     plt.figure(figsize=(15, 7))
 
@@ -193,5 +191,3 @@ def plot_loss_curve(df_scores: pd.DataFrame):
     plt.title("Accuracy:")
     plt.xlabel("Epochs:")
     plt.legend()
-
-    return None

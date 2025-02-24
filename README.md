@@ -1,11 +1,8 @@
 # Pytorch Introduction
 
-Pytorch Website: https://pytorch.org/
+Simple Repository to help with some boilerplate code to get startet with deep learning problem settings.
 
-Tutorial Website: https://github.com/mrdbourke/pytorch-deep-learning
+## Further Resources
 
-The examples are just some files from google Colab. Take a look there or go to the idividual KIT Courses.
-
-## Testing
-![Tests](https://github.com/sl2000stat/PytorchIntroduction/actions/workflows/tests.yml/badge.svg)
-
+- https://github.com/mrdbourke/pytorch-deep-learning
+- https://www.kaggle.com/code/gogo827jz/jane-street-supervised-autoencoder-mlp
