@@ -1,17 +1,11 @@
-"""
-Training functions for PyTorch models.
-
-- 'training': Trains the model and prints the training and validation loss per epoch.
-"""
-
 import pandas as pd
 import torch
 import torchmetrics
 from tqdm.auto import tqdm
 
 
-def training(
-    EPOCHS: int,
+def training(  # noqa: PLR0913
+    epochs: int,
     model: torch.nn.Module,
     train_dataloader: torch.utils.data.DataLoader,
     val_dataloader: torch.utils.data.DataLoader,
@@ -20,37 +14,25 @@ def training(
     epoch_print: int,
     writer: torch.utils.tensorboard.writer.SummaryWriter,
     device: torch.device = "cpu",
-):
-    """
-
-    This function trains the model and prints the training and validation loss per epoch.
+) -> pd.DataFrame:
+    """Train the model and print the training and validation loss per epoch.
 
     Args:
-        EPOCHS: int
-            Number of epochs to train the model.
-        model: torch.nn.Module
-            Model to train.
-        train_dataloader: torch.utils.data.DataLoader
-            Data loader containing the training data.
-        val_dataloader: torch.utils.data.DataLoader
-            Data loader containing the validation data.
-        loss_function: torch.nn.Module
-            Loss function to use.
-        optimizer: torch.optim.Optimizer
-            Optimizer to use.
-        epoch_print: int
-            Print the loss every epoch_print epochs.
-        writer: torch.utils.tensorboard.writer.SummaryWriter
-            SummaryWriter instance.
-        device: torch.device
-            Device to train the model on. Defaults to "cpu".
+        epochs (int): Number of epochs to train the model.
+        model (torch.nn.Module): PyTorch model to train.
+        train_dataloader (torch.utils.data.DataLoader): PyTorch dataloader for training data.
+        val_dataloader (torch.utils.data.DataLoader): PyTorch dataloader for validation data.
+        loss_function (torch.nn.Module): PyTorch loss function.
+        optimizer (torch.optim.Optimizer): PyTorch optimizer.
+        epoch_print (int): Print the training and validation loss every epoch_print epochs.
+        writer (torch.utils.tensorboard.writer.SummaryWriter): PyTorch SummaryWriter to log the training and validation loss.
+        device (torch.device, optional): Device to run the model on. Defaults to "cpu".
 
     Returns:
-        df_scores: pd.DataFrame
-            Dataframe containing the loss values per epoch.
+        pd.DataFrame: DataFrame with the training and validation loss per epoch.
     """
     # print
-    print("Starting training.")
+    print("Starting training.")  # noqa: T201
 
     # dict with empty lists to store the loss values
     results = {
@@ -62,7 +44,7 @@ def training(
     }
 
     # create a training and test loop
-    for epoch in tqdm(range(EPOCHS)):
+    for epoch in tqdm(range(epochs)):
         # train loss counter
         batch_train_loss, batch_train_acc = 0, 0
 
@@ -70,9 +52,9 @@ def training(
         model.train()
 
         # training: loop thorugh the training batches
-        for batch, (X_train, y_train) in enumerate(train_dataloader):
+        for _, (X_train, y_train) in enumerate(train_dataloader):  # noqa: N806
             # put data on device
-            X_train, y_train = X_train.to(device), y_train.to(device)
+            X_train, y_train = X_train.to(device), y_train.to(device)  # noqa: N806, PLW2901
 
             # calculate the forward pass
             y_pred_train = model(X_train)
@@ -109,9 +91,9 @@ def training(
         # inference mode diasables gradient tracking
         with torch.inference_mode():
             # validation: loop thorugh the validation batches
-            for batch, (X_val, y_val) in enumerate(val_dataloader):
+            for _, (X_val, y_val) in enumerate(val_dataloader):  # noqa: N806
                 # put data on device
-                X_val, y_val = X_val.to(device), y_val.to(device)
+                X_val, y_val = X_val.to(device), y_val.to(device)  # noqa: N806, PLW2901
 
                 # calculate the forward pass
                 y_pred_val = model(X_val)
@@ -166,8 +148,8 @@ def training(
         # print every epochs
         if epoch % epoch_print == 0:
             # print
-            print(f"Epoch: {epoch + 1} / {EPOCHS}\n-------")
-            print(
+            print(f"Epoch: {epoch + 1} / {epochs}\n-------")  # noqa: T201
+            print(  # noqa: T201
                 f"Train Loss: {batch_train_loss:.5f} & Accuracy: {batch_train_acc:.5f} | Validation Loss:{batch_val_loss:.5f} & Accuracy: {batch_val_acc:.5f} \n",
             )
 
@@ -178,6 +160,6 @@ def training(
     df_scores = pd.DataFrame(results)
 
     # print
-    print("Finished training.")
+    print("Finished training.")  # noqa: T201
 
     return df_scores

@@ -1,14 +1,4 @@
-"""
-Plotting functions.
-
-- 'plot_random_images': Plots random images from the image_path.
-- 'plot_transformed_images': Plots random images from the image_path.
-- 'get_confusionmatrix': Plots the confusion matrix.
-- 'plot_loss_curve': Plots the loss and accuracy curves.
-
-"""
-
-import random
+import secrets
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -18,23 +8,18 @@ from sklearn.metrics import confusion_matrix
 from torchvision import transforms
 
 
-def plot_random_images(image_path_list: list):
-    """
-    This function plots random images from the image_path.
+def plot_random_images(image_path_list: list) -> None:
+    """Plot random images from the image_path.
 
     Args:
-        image_path_list: list
-            List of image paths.
-
-    Returns:
-        None
+        image_path_list (list): List of image paths.
     """
     # plot several images
     fig = plt.figure(figsize=(18, 9))
     rows, cols = 4, 8
     for i in range(1, rows * cols + 1):
         # get a random image path
-        random_image_path = random.choice(image_path_list)
+        random_image_path = secrets.randbelow(image_path_list)
 
         # get image class from path name (the image class is the name of the directory where the image is stored)
         image_class = random_image_path.parent.stem
@@ -46,28 +31,24 @@ def plot_random_images(image_path_list: list):
             fig.add_subplot(rows, cols, i)
             plt.imshow(img)
             plt.title(image_class)
-            plt.axis(False)
 
 
-def plot_transformed_images(image_path_list: list, transform: transforms.Compose):
-    """
-    This function plots random images from the image_path.
+def plot_transformed_images(
+    image_path_list: list,
+    transform: transforms.Compose,
+) -> None:
+    """Plot transformed random images from the image_path.
 
     Args:
-        image_path_list: list
-            List of image paths.
-        transform: transforms.Compose
-            Transformations to apply to the images.
-
-    Returns:
-        None
+        image_path_list (list): List of image paths.
+        transform (transforms.Compose): Transformations to apply to the images.
     """
     # plot several images
     fig = plt.figure(figsize=(18, 9))
     rows, cols = 3, 8
     for i in range(1, rows * cols + 1, 2):
         # get a random image path
-        random_image_path = random.choice(image_path_list)
+        random_image_path = secrets.randbelow(image_path_list)
 
         # get image class from path name (the image class is the name of the directory where the image is stored)
         image_class = random_image_path.parent.stem
@@ -89,43 +70,31 @@ def plot_transformed_images(image_path_list: list, transform: transforms.Compose
             plt.axis("off")
 
 
-def get_confusionmatrix(
+def get_confusionmatrix(  # noqa: PLR0913
     y_pred_train: pd.Series,
     y_true_train: pd.Series,
     y_pred_val: pd.Series,
     y_true_val: pd.Series,
     class_names: list,
-    normalize: str = None,
-):
-    """
-
-    This function plots the confusion matrix. SEE: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+    normalize: str | None = None,
+) -> None:
+    """Plot the confusion matrix.
 
     Args:
-        y_pred_train: pd.Series
-            Predicted values for the training set.
-        y_true_train: pd.Series
-            True values for the training set.
-        y_pred_val: pd.Series
-            Predicted values for the validation set.
-        y_true_val: pd.Series
-            True values for the validation set.
-        class_names: list
-            List of class names.
-        normalize: str
-            Normalization mode. Defaults to None.
-
-    Returns:
-        None
+        y_pred_train (pd.Series): Predicted values for the training set.
+        y_true_train (pd.Series): True values for the training set.
+        y_pred_val (pd.Series): Predicted values for the validation set.
+        y_true_val (pd.Series): True values for the validation set.
+        class_names (list): List of class names.
+        normalize (str, optional): Normalize the confusion matrix. Defaults to None.
     """
     # get the confusion matrix
     mat_train = confusion_matrix(y_true_train, y_pred_train, normalize=normalize)
     mat_val = confusion_matrix(y_true_val, y_pred_val, normalize=normalize)
 
+    # create the figure
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 9))
-
     fig.suptitle("Confusion Matrix: \n")
-
     sns.heatmap(
         mat_train,
         cbar=True,
@@ -158,16 +127,11 @@ def get_confusionmatrix(
     ax2.set_ylabel("True label:")
 
 
-def plot_loss_curve(df_scores: pd.DataFrame):
-    """
-    This function plots the loss and accuracy curves.
+def plot_loss_curve(df_scores: pd.DataFrame) -> None:
+    """Plot the loss and accuracy curves.
 
     Args:
-        df_scores: pd.DataFrame
-            Dataframe containing the scores.
-
-    Returns:
-        None
+        df_scores (pd.DataFrame): DataFrame with the training and validation loss per epoch.
     """
     # Setup a plot
     plt.figure(figsize=(15, 7))

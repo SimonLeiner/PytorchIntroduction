@@ -1,38 +1,24 @@
-"""
-Module containing functions to make predictions on data.
-
-- 'make_predictions': Makes a prediction on the data X with the model.
-
-"""
-
-import torch
 import numpy as np
+import torch
 
 
 def make_predictions(
     data_loader: torch.utils.data.DataLoader,
     model: torch.nn.Module,
     device: torch.device = "cpu",
-):
-    """
-    Makes a prediction on the data X with the model.
+) -> tuple[np.array, np.array, np.array]:
+    """Make a prediction on the data X with the model.
 
     Args:
-        data_loader: torch.utils.data.DataLoader
-            Data loader containing the data to make predictions on.
-        model: torch.nn.Module
-            Model to make predictions with.
-        device: torch.device
-            Device to make predictions on.
-    Returns:
-        pred_values: np.ndarray
-            Predicted values.
-        pred_values_prob: np.ndarray
-            Predicted values as probabilities.
-        true_values: np.ndarray
-            True values.
-    """
+        data_loader (torch.utils.data.DataLoader): PyTorch DataLoader with the data.
+        model (torch.nn.Module): PyTorch model to make the prediction.
+        device (torch.device, optional): Device to run the model on. Defaults to "cpu".
 
+    Returns:
+        np.array: Predicted values.
+        np.array: Predicted values probabilities.
+        np.array: True values.
+    """
     pred_values = []
     pred_values_prob = []
     true_values = []
@@ -46,9 +32,9 @@ def make_predictions(
     # turn on inference mode
     with torch.inference_mode():
         # training: loop thorugh the training batches
-        for batch, (X, y) in enumerate(data_loader):
+        for _, (X, y) in enumerate(data_loader):  # noqa: N806
             # put data on device
-            X, y = X.to(device), y.to(device)
+            X, y = X.to(device), y.to(device)  # noqa: N806, PLW2901
 
             # Make a prediction
             y_pred = model(X)
@@ -62,7 +48,7 @@ def make_predictions(
             # append
             pred_values.append(y_pred_final.detach().cpu().numpy())
             pred_values_prob.append(
-                torch.amax(y_pred_prob, dim=1).detach().cpu().numpy()
+                torch.amax(y_pred_prob, dim=1).detach().cpu().numpy(),
             )
             true_values.append(y.detach().cpu().numpy())
 
