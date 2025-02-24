@@ -1,13 +1,20 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-# Update packages, install git, curl, and openssh-client and clean up
+# set working directory
+WORKDIR /workspace
+
+# Update packages, install git, and clean up
 RUN apt-get update && apt-get install --no-install-recommends  -y \
+    # github
     git \
+    # for installing packages
     curl \
-    gcc  python3-dev \
+    # for interacting with remote servers
     openssh-client\
+    # clean up
     && apt-get clean\
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/*
 
+# copy and install requirments
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -U -r requirements.txt

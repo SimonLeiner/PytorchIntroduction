@@ -1,30 +1,24 @@
+# Basic Project Description.
 [project]
-name = "PytorchIntroduction"
-version = "0.0.1"
-maintainers = [{ name = "Simon Leiner", email = "simon.leiner1@gmail.com" }]
-authors = [{ name = "Simon Leiner", email = "simon.leiner1@gmail.com" }]
-description = "Pytorch Introduction Helper Functions"
+name = "PytorchIntrodution"
+version = "0.1.0"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = []
-keywords = ["Deep Learning"]
-license = { file = "LICENSE" }
-classifiers = [
-    "Intended Audience :: Developers",
-    "Operating System :: MacOS",
-    "Programming Language :: Python :: 3.11",
-    "Topic :: Scientific/Engineering :: Mathematics",
-    "Topic :: Software Development",
-]
 
-[project.optional-dependencies]
-tests = ["pytest", "pytest-cov", "black", "ruff"]
+[tool.black]
+line-length = 150
 
-[project.urls]
+[tool.docformatter]
+black = true
+make-summary-multi-line = true
+pre-summary-new-line = true
+blank = true
+recursive = true
+in-place = true
 
-# Ruff formatted
+# Ruff formatter.
 [tool.ruff]
-
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
@@ -48,16 +42,7 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
-    "examples",
-    "custom_notebooks",
 ]
-
-# set line legth
-line-length = 150
-indent-width = 4
-
-# Assume Python 3.11
-target-version = "py311"
 
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
@@ -65,50 +50,65 @@ target-version = "py311"
 # McCabe complexity (`C901`) by default.
 select = ["ALL"]
 ignore = [
-    "D100",
-    "PLR0913",
-    "B018",
-    "D103",
-    "PD901",
-    "E501",
-    "ANN101",
-    "G004",
-    "D102",
+    "D100",   # Missing docstring in public module  **fix**
     "D101",
-    "S101",
-    "D211",
-    "D213",
+    "D102",   # Missing docstring in public method  **fix**
+    "D103",   # Missing docstring in public function  **fix**
+    "D104",   # Missing docstring in public package  **fix**
     "D107",
+    "D105",
+    "D200",   # One-line docstring should fit on one line with quotes (optional style)
+    "D203",   # 1 blank line required before class docstring (optional style)
+    "D205",   # 1 blank line required between summary line and description (optional style)
+    "D212",   # Multi-line docstring summary should start at the first line (optional style)
+    "D400",   # First line should end with a period (not always a first line)
+    "D413",   # Missing blank line after last section ('Parameters')
+    "D415",   # First line should end with a period, question mark, or exclamation point (not always a first line)
+    "D416",   # Section name should end with a colon ('Warnings:', not 'Warnings') (incorrect?)
+    "E741",   # Ambiguous variable name (single char)
+    "E501",   # Line too long (82 > 79 characters)
+    "PD901",  # `df` is a bad variable name. Be kinder to your future self
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101",   # Use of assert detected (OK in test suite)
+    "S105",   # Use of hardcoded password (spurious)
+    "S106",   # Use of hardcoded password (spurious)
+    "S113",   # Probable use of requests call without timeout **fix**
+    "S603",   # `subprocess` call: check for execution of untrusted input **fix**
+    "ANN101", # Missing type annotation for self in method
+    "G004",   # Logging statement uses string formatting
+    "TD003",  # Missing link to issue
+    "FIX002", # Line contains TODO, consider resolving the issue
+    "TD002",  # Missing issue reference in TODO comment
 ]
-
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
-
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
+[tool.ruff.lint.isort]
+force-single-line = true
+single-line-exclusions = ["typing"]
+lines-after-imports = 2
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
 [tool.ruff.format]
-# Like Black, use double quotes for strings.
 quote-style = "double"
-
-# Like Black, indent with spaces, rather than tabs.
 indent-style = "space"
-
-# Like Black, respect magic trailing commas.
 skip-magic-trailing-comma = false
-
-# Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
 
 [tool.ruff.lint.pydocstyle]
-convention = "numpy" # Accepts: "google", "numpy", or "pep257".
+convention = "google" # Accepts: "google", "numpy", or "pep257".
 
-# setuptools flat file structure
-[tool.setuptools.packages.find]
-where = ["."] # list of folders that contain the packages (["."] by default)
-include = [
-    "*",
-] # package names should match these glob patterns (["*"] by default)
-exclude = [] # exclude packages matching these glob patterns (empty by default)
-namespaces = false # to disable scanning PEP 420 namespaces (true by default)
+[tool.mypy]
+python_version = "3.12"
+disallow_incomplete_defs = true
+explicit_package_bases = true
+ignore_missing_imports = true
+namespace_packages = true
+warn_no_return = true
+warn_unused_configs = true
+warn_unused_ignores = true
