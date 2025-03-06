@@ -77,7 +77,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
     y_true_test: pd.Series,
     class_names: list,
     normalize: str | None = None,
-) -> None:
+) -> plt.Figure:
     """Plot the confusion matrix.
 
     Args:
@@ -87,6 +87,9 @@ def plot_confusionmatrix(  # noqa: PLR0913
         y_true_test (pd.Series): True values for the testing set.
         class_names (list): List of class names.
         normalize (str, optional): Normalize the confusion matrix. Defaults to None.
+
+    Returns:
+        plt.Figure: Figure with the confusion matrix.
     """
     # get the confusion matrix
     mat_train = confusion_matrix(y_true_train, y_pred_train, normalize=normalize)
@@ -125,6 +128,8 @@ def plot_confusionmatrix(  # noqa: PLR0913
     ax2.set_title("Testing Confusion Matrix")
     ax2.set_xlabel("Predicted label:")
     ax2.set_ylabel("True label:")
+
+    return fig
 
 
 def plot_loss_curve(df_scores: pd.DataFrame) -> None:
