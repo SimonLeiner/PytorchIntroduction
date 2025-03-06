@@ -73,8 +73,8 @@ def plot_transformed_images(
 def plot_confusionmatrix(  # noqa: PLR0913
     y_pred_train: pd.Series,
     y_true_train: pd.Series,
-    y_pred_val: pd.Series,
-    y_true_val: pd.Series,
+    y_pred_test: pd.Series,
+    y_true_test: pd.Series,
     class_names: list,
     normalize: str | None = None,
 ) -> None:
@@ -90,7 +90,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
     """
     # get the confusion matrix
     mat_train = confusion_matrix(y_true_train, y_pred_train, normalize=normalize)
-    mat_val = confusion_matrix(y_true_val, y_pred_val, normalize=normalize)
+    mat_val = confusion_matrix(y_true_test, y_pred_test, normalize=normalize)
 
     # create the figure
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 9))
@@ -122,7 +122,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
         xticklabels=class_names,
         yticklabels=class_names,
     )
-    ax2.set_title("Validation Confusion Matrix")
+    ax2.set_title("Testing Confusion Matrix")
     ax2.set_xlabel("Predicted label:")
     ax2.set_ylabel("True label:")
 
