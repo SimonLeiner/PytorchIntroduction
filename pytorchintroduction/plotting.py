@@ -83,8 +83,8 @@ def plot_confusionmatrix(  # noqa: PLR0913
     Args:
         y_pred_train (pd.Series): Predicted values for the training set.
         y_true_train (pd.Series): True values for the training set.
-        y_pred_val (pd.Series): Predicted values for the validation set.
-        y_true_val (pd.Series): True values for the validation set.
+        y_pred_test (pd.Series): Predicted values for the testing set.
+        y_true_test (pd.Series): True values for the testing set.
         class_names (list): List of class names.
         normalize (str, optional): Normalize the confusion matrix. Defaults to None.
     """
