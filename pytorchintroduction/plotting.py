@@ -76,6 +76,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
     y_pred_test: pd.Series,
     y_true_test: pd.Series,
     class_names: list,
+    title: str,
     normalize: str | None = None,
 ) -> plt.Figure:
     """Plot the confusion matrix.
@@ -86,6 +87,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
         y_pred_test (pd.Series): Predicted values for the testing set.
         y_true_test (pd.Series): True values for the testing set.
         class_names (list): List of class names.
+        title (str): Title of the confusion matrix.
         normalize (str, optional): Normalize the confusion matrix. Defaults to None.
 
     Returns:
@@ -97,7 +99,7 @@ def plot_confusionmatrix(  # noqa: PLR0913
 
     # create the figure
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 9))
-    fig.suptitle("Confusion Matrix: \n")
+    fig.suptitle(f"Confusion Matrix for {title}: \n")
     sns.heatmap(
         mat_train,
         cbar=True,
