@@ -70,7 +70,7 @@ def plot_transformed_images(
             plt.axis("off")
 
 
-def get_confusionmatrix(  # noqa: PLR0913
+def plot_confusionmatrix(  # noqa: PLR0913
     y_pred_train: pd.Series,
     y_true_train: pd.Series,
     y_pred_val: pd.Series,
