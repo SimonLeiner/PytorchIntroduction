@@ -60,24 +60,3 @@ def set_global_seed(seed: int = 42) -> None:
     np.random.default_rng(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-
-
-def train_time(start: float, end: float, device: str | None = None) -> float:
-    """Print the time it took to train the model.
-
-    Args:
-        start (float): Start time.
-        end (float): End time.
-        device (str, optional): Device used for training. Defaults to None.
-
-    Returns:
-        total_time: float
-            Total time it took to train the model.
-    """
-    # calculate the total time
-    total_time = end - start
-
-    # print the total time
-    print(f"\nTrain time on {device}: {total_time:.3f} seconds")  # noqa: T201
-
-    return total_time

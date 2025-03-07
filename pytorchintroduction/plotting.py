@@ -134,31 +134,42 @@ def plot_confusionmatrix(  # noqa: PLR0913
     return fig
 
 
-def plot_loss_curve(df_scores: pd.DataFrame) -> None:
-    """Plot the loss and accuracy curves.
+def plot_loss_curve(df_scores: pd.DataFrame) -> plt.Figure:
+    """Generate a figure for the loss and accuracy curves.
 
     Args:
         df_scores (pd.DataFrame): DataFrame with the training and validation loss per epoch.
+
+    Returns:
+        plt.Figure: The generated matplotlib figure.
     """
-    # Setup a plot
-    plt.figure(figsize=(15, 7))
+    # Create a figure
+    fig, axes = plt.subplots(1, 2, figsize=(15, 7))
 
     # Plot loss
-    plt.subplot(1, 2, 1)
-    plt.plot(df_scores["Epoch"], df_scores["Train Loss"], label="Train Loss")
-    plt.plot(df_scores["Epoch"], df_scores["Validation Loss"], label="Validation Loss")
-    plt.title("Loss:")
-    plt.xlabel("Epochs:")
-    plt.legend()
+    axes[0].plot(df_scores["Epoch"], df_scores["Train Loss"], label="Train Loss")
+    axes[0].plot(
+        df_scores["Epoch"],
+        df_scores["Validation Loss"],
+        label="Validation Loss",
+    )
+    axes[0].set_title("Loss")
+    axes[0].set_xlabel("Epochs")
+    axes[0].legend()
 
     # Plot accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(df_scores["Epoch"], df_scores["Train Accuracy"], label="Train Accuracy")
-    plt.plot(
+    axes[1].plot(
+        df_scores["Epoch"],
+        df_scores["Train Accuracy"],
+        label="Train Accuracy",
+    )
+    axes[1].plot(
         df_scores["Epoch"],
         df_scores["Validation Accuracy"],
         label="Validation Accuracy",
     )
-    plt.title("Accuracy:")
-    plt.xlabel("Epochs:")
-    plt.legend()
+    axes[1].set_title("Accuracy")
+    axes[1].set_xlabel("Epochs")
+    axes[1].legend()
+
+    return fig
