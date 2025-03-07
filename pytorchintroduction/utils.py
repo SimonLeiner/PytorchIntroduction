@@ -1,5 +1,5 @@
+import datetime
 import os
-from datetime import datetime
 
 import numpy as np
 import torch
@@ -23,7 +23,7 @@ def create_writer(
 
     """
     # Get timestamp of current date (all experiments on certain day live in same folder)
-    timestamp = datetime.now(tz=datetime.UTC).strftime("%Y-%m-%d")
+    timestamp = datetime.datetime.now(tz=datetime.UTC).strftime("%Y-%m-%d")
 
     if extra:
         # Create log directory path
