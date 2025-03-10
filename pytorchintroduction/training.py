@@ -4,7 +4,7 @@ import torchmetrics
 from tqdm.auto import tqdm
 
 
-def training(  # noqa: PLR0913
+def train(  # noqa: PLR0913
     epochs: int,
     model: torch.nn.Module,
     train_dataloader: torch.utils.data.DataLoader,
